@@ -4,6 +4,16 @@
 
 <h1>Todos</h1>
 
+<%= form_with url: todos_path, method: :get do |form| %>
+  <%= label_tag :category, "Category" %>
+  <%= select_tag :category, options_for_select(@filter_categories, params[:category]), id: "category_filter" %>
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<% if @todos.empty? && params[:category].present? %>
+  <p>No todos found</p>
+<% end %>
+
 <div id="todos">
   <% @todos.each do |todo| %>
     <%= render todo %>

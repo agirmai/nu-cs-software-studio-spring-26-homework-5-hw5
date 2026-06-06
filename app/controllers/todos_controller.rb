@@ -3,7 +3,12 @@ class TodosController < ApplicationController
 
   # GET /todos or /todos.json
   def index
-    @todos = Todo.all
+    @todos = if params[:category].present?
+      Todo.with_category(params[:category])
+    else
+      Todo.all
+    end
+    @filter_categories = (Todo.distinct.pluck(:category).compact + %w[Personal Work School]).uniq.sort
   end
 
   # GET /todos/1 or /todos/1.json
@@ -72,6 +77,6 @@ class TodosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def todo_params
-      params.expect(todo: [ :description ])
+      params.expect(todo: [ :description, :category ])
     end
 end
